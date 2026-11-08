@@ -69,26 +69,6 @@ Todos parten de `data/aerocivil_trafico.csv` (216.599 filas, 27 columnas). Los f
 **Notas:**
 - El taxi aéreo (T) no reporta sillas, por eso queda fuera de `df_occ` y sus derivados.
 - 2026 solo llega hasta junio, por eso no se usa en `df_temp`.
-- Si la pregunta 5 se limita a vuelos regulares, usar `df_occ_reg |> filter(Tráfico %in% c("N", "I"))`.
-
-```r
-# Para análisis de pasajeros (excluye los 20 NA)
-df_pax <- df |> filter(!is.na(`Pasajeros A Bordo`))
-
-# Para análisis de ocupación (sillas > 0)
-df_occ <- df_pax |>
-  filter(`Sillas Ofrecidas` > 0) |>
-  mutate(Ocupacion = `Pasajeros A Bordo` / `Sillas Ofrecidas`)
-
-# Para análisis de temporadas: años completos
-df_temp <- df_pax |> filter(Año %in% 2022:2025)
-
-# Para pregunta 5: nacional vs internacional (excluye E)
-df_occ_ni <- df_occ |> filter(Tráfico %in% c("N", "I"))
-
-# Para preguntas de ocupación: solo vuelos regulares
-df_occ_reg <- df_occ |> filter(`Tipo Vuelo` == "R")
-```
 
 ----------
 ## Preguntas de investigación
