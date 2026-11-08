@@ -48,3 +48,7 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+#Datos sin procesar, pesados o dañados
+*.xlsx
+data/raw/
