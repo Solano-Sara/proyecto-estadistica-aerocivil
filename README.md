@@ -109,3 +109,8 @@ Todos parten de `data/aerocivil_trafico.csv` (216.599 filas, 27 columnas). Los f
 - **Qué se pretende conocer:** P(ocupación alta), P(ocupación alta | nacional) y P(ocupación alta | internacional), y si el evento es independiente del tipo de tráfico. Con el Teorema de Bayes se calcula la probabilidad inversa, P(internacional | ocupación alta).
 - **Razón de interes:** muestra si conocer el tipo de tráfico aporta información sobre qué tan llenos van los aviones, y conecta con las secciones de probabilidad y Bayes.
 - **Definiciones:** nacional (`Tráfico` = N) es origen y destino en Colombia; internacional (`Tráfico` = I) es exactamente un extremo en Colombia. Se excluye `Tráfico` = E (ningún extremo en Colombia, 0,6 % de los registros). El umbral de 80 % es una convención; la mediana de ocupación es 0,79 y el percentil 75 es 0,88.
+
+----------
+## 04_probabilidad_tlc.R (Persona C)
+
+Calcula probabilidades de ocupación alta de los vuelos (pregunta 5), aplica el Teorema de Bayes y verifica el Teorema del Límite Central con una simulación sobre el número de pasajeros por registro. Genera tablas en consola y tres gráficos en la carpeta `figuras/`.
