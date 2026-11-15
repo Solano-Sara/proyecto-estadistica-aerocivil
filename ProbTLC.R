@@ -2,7 +2,7 @@ library(tidyverse)
 set.seed(42)
 dir.create("figuras", showWarnings = FALSE)
 
-df <- read_csv("data/aerocivil_trafico.csv", show_col_types = FALSE)
+df <- read_csv("aerocivil_trafico.csv", show_col_types = FALSE)
 
 df <- df |>
   mutate(Internacional = `Tráfico` == "I")
