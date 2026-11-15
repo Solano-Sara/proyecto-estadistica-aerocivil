@@ -17,7 +17,7 @@ d0 <- df |>
   mutate(Ocupacion = `Pasajeros A Bordo` / `Sillas Ofrecidas`)
 
 cat("Registros con sillas > 0:", nrow(d0), "\n")
-cat("Registros con ocupación > 1 (excluidos):", sum(d0$Ocupacion > 1), "\n")
+cat("Registros con ocupación > 1 (excluidos):", sum(d0$Ocupacion > 1, na.rm = TRUE), "\n")
 
 d <- d0 |>
   filter(Ocupacion <= 1) |>
@@ -111,7 +111,7 @@ g_pob <- ggplot(tibble(x), aes(x + 1)) +
        x = "Pasajeros a bordo + 1", y = "Frecuencia")
 ggsave("figuras/tlc_poblacion.png", g_pob, width = 7, height = 4, dpi = 150)
 
-ns <- c(2, 5, 30, 100)
+ns <- c(2, 5, 30, 100, 500, 1000)
 B  <- 2000
 
 medias <- map_dfr(ns, \(n) {
