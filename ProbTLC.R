@@ -2,18 +2,17 @@ library(tidyverse)
 set.seed(42)
 dir.create("figuras", showWarnings = FALSE)
 
-df <- read_csv("data/clean/vuelos_limpio.csv", show_col_types = FALSE)
+df <- read_csv("data/aerocivil_trafico.csv", show_col_types = FALSE)
 
 df <- df |>
-  mutate(Internacional = toupper(trimws(`Pais Origen`)) != "COLOMBIA" |
-                         toupper(trimws(`Pais Destino`)) != "COLOMBIA")
+  mutate(Internacional = `Tráfico` == "I")
 
 cat("NA en Internacional:", sum(is.na(df$Internacional)), "\n")
 
 UMBRAL <- 0.80
 
 d0 <- df |>
-  filter(`Sillas Ofrecidas` > 0, !is.na(Internacional)) |>
+  filter(`Sillas Ofrecidas` > 0, `Tráfico` %in% c("N", "I")) |>
   mutate(Ocupacion = `Pasajeros A Bordo` / `Sillas Ofrecidas`)
 
 cat("Registros con sillas > 0:", nrow(d0), "\n")
