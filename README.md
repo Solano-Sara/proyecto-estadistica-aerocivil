@@ -200,9 +200,7 @@ Script: `R/temporal_correlacion.R`. Resultados: `tablas/p2_*.csv` y `figuras/p2_
 | 2025 | 12 | 62.198.920 | 133,7 | 109,5 |
 | 2026 | 6 | 31.120.346 | 133,8 | 111,0 |
 
-![Pasajeros a bordo por mes](figuras/p2_serie_mensual.png)
 
-![Índice de recuperación](figuras/p2_indice_recuperacion.png)
 
 1. **La caída fue casi total y muy rápida:** de marzo a abril de 2020 los pasajeros pasaron de 55,8 % a 0,3 % de la base. Entre abril y agosto de 2020 el índice de pasajeros se mantuvo entre 0,3 % y 0,8 %.
 2. **La recuperación fue gradual:** en 2020 el índice promedio fue 31,2 y en 2021, 70,2. El nivel base se superó por primera vez en diciembre de 2021, volvió a bajar en febrero de 2022 (90,0) y se mantuvo por encima de 100 desde marzo de 2022. Es decir, la recuperación tomó unos 23 meses desde el mínimo.
@@ -225,9 +223,6 @@ Script: `R/temporal_correlacion.R`. Resultados: `tablas/p2_*.csv` y `figuras/p2_
 | Noviembre | 1 | 0 | 1,038 | Intermedia |
 | Diciembre | 4 | 0 | 1,127 | **Alta** |
 
-![Índice estacional](figuras/p2_estacionalidad.png)
-
-![Pasajeros por mes en cada año](figuras/p2_estacionalidad_anios.png)
 
 4. **Temporada alta: julio y diciembre** (en los cuatro años). Diciembre es el mes más fuerte (12,7 % sobre el promedio mensual) y julio el segundo (8,1 %). Agosto es alto en dos de los cuatro años y su índice (1,066) es cercano al de julio.
 5. **Temporada baja: febrero y abril.** Febrero está en temporada baja los cuatro años (13,4 % bajo el promedio); abril, en tres de cuatro.
@@ -263,11 +258,6 @@ Script: `R/temporal_correlacion.R`. Resultados: `tablas/p3_*.csv` y `figuras/p3_
 | Vuelos – Pasajeros | 0,963 | 0,908 | 0,877 | 0,988 |
 | Sillas – Vuelos | 0,970 | 0,912 | 0,903 | 0,996 |
 
-![Pasajeros vs sillas](figuras/p3_pasajeros_vs_sillas.png)
-
-![Pasajeros vs vuelos](figuras/p3_pasajeros_vs_vuelos.png)
-
-![Sillas vs vuelos](figuras/p3_sillas_vs_vuelos.png)
 
 1. **La relación es muy fuerte** en las tres parejas y con los cuatro métodos. La más fuerte es sillas-pasajeros (Pearson 0,994).
 2. **Regresión:** cada silla ofrecida adicional se asocia con 0,809 pasajeros adicionales (intercepto −33,4) y la oferta de sillas explica el 98,7 % de la variabilidad de los pasajeros por registro (R² = 0,987). La pendiente es cercana a la ocupación ponderada de las aerolíneas regulares (0,72 a 0,85 en la pregunta 1).
@@ -311,9 +301,6 @@ Script: `R/temporal_correlacion.R`. Resultados: `tablas/lgn_tabla.csv` y `figura
 | 50.000 | 1.431 | 0,79 | 1,05 | 19,1 |
 | 100.000 | 1.426 | 0,458 | 0,664 | 11,9 |
 
-![Media acumulada](figuras/lgn_trayectorias.png)
-
-![Error relativo medio](figuras/lgn_error_relativo.png)
 
 1. **Se cumple la ley:** la media muestral se acerca a μ a medida que crece n, y las tres trayectorias de la media acumulada se estabilizan alrededor de μ.
 2. **La convergencia es lenta** porque la variable es muy asimétrica y con valores extremos: con n = 1.000 todavía hay un error típico cercano al 9 %. El error baja aproximadamente como σ/√n.
