@@ -2,9 +2,11 @@
 
 Para trabajar con el data set utilizar
 
+```r
 library(tidyverse)
 
 df <- read_csv("data/aerocivil_trafico.csv")
+```
 
 ----------
 ## Diccionario de variables
@@ -62,8 +64,8 @@ Todos parten de `data/aerocivil_trafico.csv` (216.599 filas, 27 columnas). Los f
 | `df` | Ninguno (todos los registros) | 216.599 | Datos completos |
 | `df_pax` | Excluye los 20 registros sin `Pasajeros A Bordo` | 216.579 | Preguntas 2 y 4, LGN y TLC |
 | `df_occ` | `df_pax` con `Sillas Ofrecidas` > 0; agrega `Ocupacion` = pasajeros / sillas | 86.706 | Pregunta 3 |
-| `df_occ_reg` | `df_occ` solo con `Tipo Vuelo` = R (regular) | 77.371 | Pregunta 1 y base de la pregunta 5 |
-| `df_occ_reg_ni` | `df_occ` con `Tráfico` = N o I (excluye E) y `Tipo Vuelo` = R (regular)| 86.565 | Pregunta 5 (todos los tipos de vuelo) |
+| `df_occ_reg` | `df_occ` solo con `Tipo Vuelo` = R (regular) | 77.371 | Pregunta 1 |
+| `df_occ_ni` | `df_occ` con `Tráfico` = N o I (excluye E), todos los tipos de vuelo | 86.565 | Pregunta 5 |
 | `df_temp` | `df_pax` de 2022 a 2025 (años completos) | 136.559 | Pregunta 2b (temporadas) |
 
 **Notas:**
@@ -74,7 +76,7 @@ Todos parten de `data/aerocivil_trafico.csv` (216.599 filas, 27 columnas). Los f
 ## Preguntas de investigación
 
 ### Pregunta 1: Diferencias de ocupación entre aerolíneas
-**¿Cómo difiere el factor de ocupación (`Pasajeros A Bordo` / `Sillas Ofrecidas`) entre las cinco aerolíneas(número propuesto, cambiar acorde a número de pasajeros por aerolinea) con más pasajeros que operan vuelos regulares?**
+**¿Cómo difiere el factor de ocupación (`Pasajeros A Bordo` / `Sillas Ofrecidas`) entre las cinco aerolíneas (número propuesto, cambiar acorde a número de pasajeros por aerolinea) con más pasajeros que operan vuelos regulares?**
 
 - **Qué se pretende conocer:** si existen diferencias sistemáticas en el aprovechamiento de las sillas entre empresas (`Sigla Empresa`), comparando media, mediana, dispersión y boxplots de la ocupación por aerolínea.
 - **Razón de interes:** la ocupación indica qué tan eficientemente cada empresa usa su capacidad, lo que se relaciona con su rentabilidad y su estrategia comercial.
@@ -103,11 +105,11 @@ Todos parten de `data/aerocivil_trafico.csv` (216.599 filas, 27 columnas). Los f
 - **Nota:** el taxi aéreo (T) es el 51 % de los registros pero solo el 0,57 % de los pasajeros, por lo que la distribución se muestra con todos los registros y también solo para vuelos regulares.
 
 ### Pregunta 5: Probabilidad condicional de ocupación alta
-**¿Cambia la probabilidad de que un registro regular tenga ocupación alta (superior al 80 %) según sea tráfico nacional o internacional?**
-(Pregunta para vuelos regulares, 
+**¿Cambia la probabilidad de que un registro tenga ocupación alta (superior al 80 %) según sea tráfico nacional o internacional?**
 
 - **Qué se pretende conocer:** P(ocupación alta), P(ocupación alta | nacional) y P(ocupación alta | internacional), y si el evento es independiente del tipo de tráfico. Con el Teorema de Bayes se calcula la probabilidad inversa, P(internacional | ocupación alta).
 - **Razón de interes:** muestra si conocer el tipo de tráfico aporta información sobre qué tan llenos van los aviones, y conecta con las secciones de probabilidad y Bayes.
+- **Datos usados:** registros con `Sillas Ofrecidas` > 0 y `Tráfico` = N o I, de todos los tipos de vuelo (86.565 registros).
 - **Definiciones:** nacional (`Tráfico` = N) es origen y destino en Colombia; internacional (`Tráfico` = I) es exactamente un extremo en Colombia. Se excluye `Tráfico` = E (ningún extremo en Colombia, 0,6 % de los registros). El umbral de 80 % es una convención; la mediana de ocupación es 0,79 y el percentil 75 es 0,88.
 
 ----------
