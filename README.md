@@ -121,7 +121,7 @@ Todos parten de `data/aerocivil_trafico.csv` (216.599 filas, 27 columnas). Los f
 - **Fuente:** Aerocivil, datos abiertos (datos.gov.co), *Transporte Aéreo – Tráfico por Equipo (Colombia)*. Periodo: enero de 2020 a junio de 2026.
 - **Población de análisis:** registros de vuelos regulares (`Tipo Vuelo` = R) con `Sillas Ofrecidas` > 0 y `Pasajeros A Bordo` no faltante (77.371 registros, data frame `df_occ_reg`).
 - **Aerolíneas comparadas (41.995 registros):** las cinco con más pasajeros en vuelos regulares que operaron durante todo el periodo (registros en 2026 y al menos 60 meses con datos): Avianca (AVA), Aires (ARE), AeroRepública (RPB), Copa Airlines (CMP) y Easyfly (EFY).
-- **Aerolínea excluida:** Fast Colombia (VVC) quedó entre las cinco con más pasajeros, pero sus datos terminan en febrero de 2023 (suspendió operaciones el 27 de febrero de 2023), por lo que no es comparable con las demás. [Citar fuente.]
+- **Aerolínea excluida:** Fast Colombia (VVC) quedó entre las cinco con más pasajeros, pero sus datos terminan en febrero de 2023, por lo que no es comparable con las demás. [https://www.supersociedades.gov.co/noticias-supersociedades/-/asset_publisher/atwl/content/proceso-de-fast-colombia-s.a.s-viva-air-]
 - **Variable de interés:** factor de ocupación = `Pasajeros A Bordo` / `Sillas Ofrecidas`.
 
 ### Técnicas utilizadas
