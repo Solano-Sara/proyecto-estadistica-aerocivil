@@ -164,9 +164,166 @@ Easyfly promedia 51,7 sillas por vuelo, frente a 153 a 183 en las otras cuatro a
 - Con más de 40.000 registros casi cualquier diferencia resulta significativa; por eso se interpretan también las diferencias de mediana.
 - Easyfly opera aeronaves de unas 52 sillas por vuelo en promedio, frente a 153 a 183 en las demás, por lo que su ocupación no es directamente comparable con la de las otras aerolíneas.
 
-## Pregunta 2:
+## Pregunta 2: Pandemia y temporadas
 
-## Pregunta 3:
+### Datos utilizados
+
+- **2a (caída y recuperación):** `df_pax` (216.579 registros), agregado por mes (78 meses, enero 2020 a junio 2026). Se analizan `Pasajeros A Bordo` y `Número de Vuelos`.
+- **Línea base:** promedio mensual de enero-febrero de 2020 (3.876.541 pasajeros y 42.899 vuelos por mes).
+- **2b (temporadas):** `df_temp`, años completos 2022-2025 (136.559 registros), agregado por mes (48 meses).
+
+### Técnicas utilizadas
+
+- Índice de recuperación = valor del mes / base × 100, para pasajeros y para vuelos.
+- Mes mínimo, caída máxima, primer mes con índice ≥ 100 y primer mes con recuperación sostenida (3 meses seguidos con índice ≥ 100).
+- Temporadas: dentro de cada año se calculan los percentiles 25 y 75 de los pasajeros mensuales; un mes es de temporada alta si supera el P75 y baja si queda bajo el P25. Se clasifica como alta o baja si cumple la condición en **al menos 3 de los 4 años**. Los percentiles se calculan por año (y no con los 48 meses juntos) para que el crecimiento del tráfico entre 2022 y 2025 no haga parecer "altos" a los meses de los últimos años.
+- Índice estacional = pasajeros del mes / promedio mensual del año, promediado entre años.
+
+Script: `R/temporal_correlacion.R`. Resultados: `tablas/p2_*.csv` y `figuras/p2_*.png`.
+
+### Hallazgos principales
+
+**Caída y recuperación (2a).**
+
+| Variable | Mes mínimo | Valor mínimo | Caída máxima | Primer mes ≥ 100 | Recuperación sostenida |
+|---|---|---|---|---|---|
+| Pasajeros a bordo | abril 2020 | 11.778 | 99,7 % | diciembre 2021 | marzo 2022 |
+| Número de vuelos | abril 2020 | 3.227 | 92,5 % | diciembre 2021 | marzo 2022 |
+
+| Año | Meses | Pasajeros totales | Índice promedio pasajeros | Índice promedio vuelos |
+|---|---|---|---|---|
+| 2020 | 12 | 14.526.303 | 31,2 | 41,0 |
+| 2021 | 12 | 32.639.166 | 70,2 | 75,6 |
+| 2022 | 12 | 52.599.764 | 113,1 | 102,6 |
+| 2023 | 12 | 53.509.278 | 115,0 | 97,8 |
+| 2024 | 12 | 60.901.450 | 130,9 | 106,9 |
+| 2025 | 12 | 62.198.920 | 133,7 | 109,5 |
+| 2026 | 6 | 31.120.346 | 133,8 | 111,0 |
+
+![Pasajeros a bordo por mes](figuras/p2_serie_mensual.png)
+
+![Índice de recuperación](figuras/p2_indice_recuperacion.png)
+
+1. **La caída fue casi total y muy rápida:** de marzo a abril de 2020 los pasajeros pasaron de 55,8 % a 0,3 % de la base. Entre abril y agosto de 2020 el índice de pasajeros se mantuvo entre 0,3 % y 0,8 %.
+2. **La recuperación fue gradual:** en 2020 el índice promedio fue 31,2 y en 2021, 70,2. El nivel base se superó por primera vez en diciembre de 2021, volvió a bajar en febrero de 2022 (90,0) y se mantuvo por encima de 100 desde marzo de 2022. Es decir, la recuperación tomó unos 23 meses desde el mínimo.
+3. **Los pasajeros se recuperaron más que los vuelos.** En 2023 los pasajeros estaban 15 % sobre la base mientras que los vuelos estaban 2,2 % por debajo (97,8). Los pasajeros crecieron más que los vuelos, algo consistente con más pasajeros por vuelo, aunque estos datos no permiten establecer la causa.
+
+**Temporadas (2b), años 2022-2025.**
+
+| Mes | Años en temporada alta (de 4) | Años en temporada baja (de 4) | Índice estacional medio | Clasificación |
+|---|---|---|---|---|
+| Enero | 1 | 1 | 1,017 | Intermedia |
+| Febrero | 0 | 4 | 0,866 | **Baja** |
+| Marzo | 0 | 2 | 0,944 | Intermedia |
+| Abril | 0 | 3 | 0,921 | **Baja** |
+| Mayo | 0 | 2 | 0,941 | Intermedia |
+| Junio | 0 | 0 | 0,994 | Intermedia |
+| Julio | 4 | 0 | 1,081 | **Alta** |
+| Agosto | 2 | 0 | 1,066 | Intermedia |
+| Septiembre | 0 | 0 | 0,982 | Intermedia |
+| Octubre | 0 | 0 | 1,024 | Intermedia |
+| Noviembre | 1 | 0 | 1,038 | Intermedia |
+| Diciembre | 4 | 0 | 1,127 | **Alta** |
+
+![Índice estacional](figuras/p2_estacionalidad.png)
+
+![Pasajeros por mes en cada año](figuras/p2_estacionalidad_anios.png)
+
+4. **Temporada alta: julio y diciembre** (en los cuatro años). Diciembre es el mes más fuerte (12,7 % sobre el promedio mensual) y julio el segundo (8,1 %). Agosto es alto en dos de los cuatro años y su índice (1,066) es cercano al de julio.
+5. **Temporada baja: febrero y abril.** Febrero está en temporada baja los cuatro años (13,4 % bajo el promedio); abril, en tres de cuatro.
+6. Los meses de mayor demanda coinciden con las vacaciones de mitad y fin de año. Es una hipótesis razonable, pero los datos no permiten comprobar la causa.
+
+### Limitaciones
+
+- La línea base son solo dos meses de 2020, y febrero es estacionalmente bajo (índice 0,866 en los años normales). Por eso el índice mezcla recuperación y estacionalidad: los meses de temporada alta quedan por encima de 100 aunque el tráfico "normal" no hubiera crecido.
+- `Pasajeros A Bordo` se cuenta por trayecto: un viaje con escala se cuenta más de una vez, y no incluye pasajeros no pagos.
+- La estacionalidad se estima con solo cuatro años; la regla de 3 de 4 años y los umbrales P25/P75 son criterios del grupo, y con otros umbrales podrían cambiar los meses intermedios.
+
+## Pregunta 3: Asociación entre oferta y uso
+
+### Datos utilizados
+
+`df_occ`: registros con `Sillas Ofrecidas` > 0 y `Pasajeros A Bordo` no faltante (86.706 registros). Se excluye el taxi aéreo (no reporta sillas). Los diagramas de dispersión omiten los registros con 0 en alguna variable (escala logarítmica); por ejemplo, 902 registros tienen 0 pasajeros.
+
+### Técnicas utilizadas
+
+- Correlación de Pearson (lineal) y de Spearman (monótona, robusta a valores extremos) entre `Sillas Ofrecidas`, `Número de Vuelos` y `Pasajeros A Bordo`.
+- Pearson sobre log(1 + x), porque las tres variables son muy asimétricas, y sobre los totales mensuales.
+- Regresión lineal simple de pasajeros sobre sillas.
+- Correlación de Spearman entre la ocupación y el tamaño del registro (sillas, vuelos).
+- Diagramas de dispersión con escala logarítmica.
+
+Script: `R/temporal_correlacion.R`. Resultados: `tablas/p3_*.csv` y `figuras/p3_*.png`.
+
+### Hallazgos principales
+
+| Pares de variables | Pearson | Spearman | Pearson (log) | Pearson (totales mensuales) |
+|---|---|---|---|---|
+| Sillas – Pasajeros | 0,994 | 0,989 | 0,965 | 0,994 |
+| Vuelos – Pasajeros | 0,963 | 0,908 | 0,877 | 0,988 |
+| Sillas – Vuelos | 0,970 | 0,912 | 0,903 | 0,996 |
+
+![Pasajeros vs sillas](figuras/p3_pasajeros_vs_sillas.png)
+
+![Pasajeros vs vuelos](figuras/p3_pasajeros_vs_vuelos.png)
+
+![Sillas vs vuelos](figuras/p3_sillas_vs_vuelos.png)
+
+1. **La relación es muy fuerte** en las tres parejas y con los cuatro métodos. La más fuerte es sillas-pasajeros (Pearson 0,994).
+2. **Regresión:** cada silla ofrecida adicional se asocia con 0,809 pasajeros adicionales (intercepto −33,4) y la oferta de sillas explica el 98,7 % de la variabilidad de los pasajeros por registro (R² = 0,987). La pendiente es cercana a la ocupación ponderada de las aerolíneas regulares (0,72 a 0,85 en la pregunta 1).
+3. **Spearman y la escala log dan valores menores** (por ejemplo, vuelos-pasajeros baja de 0,963 a 0,908 y 0,877): la correlación de Pearson está empujada en parte por los registros muy grandes.
+4. **Una parte de la correlación es mecánica.** Un registro agrupa varios vuelos (mediana de 14) y tanto las sillas como los pasajeros crecen con el tamaño del registro. Prueba de ello: la ocupación casi no depende del tamaño (Spearman 0,161 con sillas y 0,135 con vuelos). Saber cuántas sillas se ofrecen casi determina el número de pasajeros, pero no dice qué tan llenos van los aviones.
+5. Con totales mensuales las correlaciones suben a 0,988-0,996: la oferta y la demanda se mueven juntas en el tiempo.
+
+### Limitaciones
+
+- Correlación no implica causalidad: las aerolíneas ofrecen más sillas donde esperan más demanda, así que el efecto va en ambas direcciones.
+- Los registros son agregados (mes × empresa × trayecto × equipo), no vuelos individuales.
+- `Pasajeros A Bordo` solo cuenta pasajeros de pago y se cuenta por trayecto.
+- Se excluyen los registros sin sillas (60 % del total, incluido todo el taxi aéreo), por lo que las conclusiones aplican solo a vuelos con sillas reportadas.
+
+## Ley de los Grandes Números
+
+### Datos utilizados
+
+`df_pax` (216.579 registros). Variable: `Pasajeros A Bordo` por registro. Población: todos los registros.
+
+### Técnicas utilizadas
+
+Se calculó la media poblacional con todos los datos y se extrajeron muestras aleatorias sin reemplazo (`set.seed(42)`) de tamaños n = 10, 50, 100, 500, 1.000, 5.000, 10.000, 50.000 y 100.000. Para cada n se registró una muestra y, para ver el error típico, el promedio de 200 muestras. También se graficó la media acumulada de 3 muestras aleatorias independientes.
+
+Script: `R/temporal_correlacion.R`. Resultados: `tablas/lgn_tabla.csv` y `figuras/lgn_*.png`.
+
+### Hallazgos principales
+
+- **Media poblacional:** μ = 1.419,8 pasajeros por registro. **Desviación estándar:** σ = 5.034,3. **Mediana:** 9. El 21,2 % de los registros tiene 0 pasajeros y el máximo es 133.048.
+- La distribución está muy sesgada a la derecha: la media es 158 veces la mediana, y σ es 3,5 veces μ.
+
+| n | Media de una muestra | Error relativo de esa muestra (%) | Error relativo medio de 200 muestras (%) | Desv. est. de las 200 medias |
+|---|---|---|---|---|
+| 10 | 256 | 82,0 | 82,7 | 1.755 |
+| 50 | 785 | 44,7 | 41,4 | 799 |
+| 100 | 612 | 56,9 | 30,8 | 555 |
+| 500 | 1.735 | 22,2 | 13,5 | 235 |
+| 1.000 | 1.399 | 1,46 | 9,03 | 161 |
+| 5.000 | 1.495 | 5,31 | 4,48 | 80,2 |
+| 10.000 | 1.366 | 3,78 | 2,90 | 50,3 |
+| 50.000 | 1.431 | 0,79 | 1,05 | 19,1 |
+| 100.000 | 1.426 | 0,458 | 0,664 | 11,9 |
+
+![Media acumulada](figuras/lgn_trayectorias.png)
+
+![Error relativo medio](figuras/lgn_error_relativo.png)
+
+1. **Se cumple la ley:** la media muestral se acerca a μ a medida que crece n, y las tres trayectorias de la media acumulada se estabilizan alrededor de μ.
+2. **La convergencia es lenta** porque la variable es muy asimétrica y con valores extremos: con n = 1.000 todavía hay un error típico cercano al 9 %. El error baja aproximadamente como σ/√n.
+3. **Con una sola muestra por n el error no siempre baja** al aumentar n: con n = 50 el error fue 44,7 % y con n = 100 fue 56,9 %; con n = 1.000 fue solo 1,46 % por suerte, aunque el error típico era 9,03 %. Por eso se promedia sobre 200 muestras, donde el error sí disminuye de forma sostenida (de 82,7 % con n = 10 a 0,66 % con n = 100.000).
+4. **La dispersión de las medias baja como σ/√n:** con n = 1.000 la desviación estándar de las medias fue 161 y σ/√1.000 = 159; con n = 100.000 fue 11,9, menor que σ/√100.000 = 15,9, porque esa muestra ya es una parte grande (46 %) de la población de 216.579 registros.
+
+### Limitaciones
+
+- Cada registro es un agregado mes × empresa × trayecto × equipo, así que "una observación" no es un pasajero ni un vuelo.
+- Es la misma variable que usa la pregunta 4 y el Teorema del Límite Central, lo que permite compararlos.
 
 ## Pregunta 4:
 
