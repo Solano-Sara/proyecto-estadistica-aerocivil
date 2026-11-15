@@ -109,3 +109,65 @@ Todos parten de `data/aerocivil_trafico.csv` (216.599 filas, 27 columnas). Los f
 - **Qué se pretende conocer:** P(ocupación alta), P(ocupación alta | nacional) y P(ocupación alta | internacional), y si el evento es independiente del tipo de tráfico. Con el Teorema de Bayes se calcula la probabilidad inversa, P(internacional | ocupación alta).
 - **Razón de interes:** muestra si conocer el tipo de tráfico aporta información sobre qué tan llenos van los aviones, y conecta con las secciones de probabilidad y Bayes.
 - **Definiciones:** nacional (`Tráfico` = N) es origen y destino en Colombia; internacional (`Tráfico` = I) es exactamente un extremo en Colombia. Se excluye `Tráfico` = E (ningún extremo en Colombia, 0,6 % de los registros). El umbral de 80 % es una convención; la mediana de ocupación es 0,79 y el percentil 75 es 0,88.
+
+
+# Desarrollo
+
+
+## Pregunta 1: Ocupación entre aerolíneas
+
+### Datos utilizados
+
+- **Fuente:** Aerocivil, datos abiertos (datos.gov.co), *Transporte Aéreo – Tráfico por Equipo (Colombia)*. Periodo: enero de 2020 a junio de 2026.
+- **Población de análisis:** registros de vuelos regulares (`Tipo Vuelo` = R) con `Sillas Ofrecidas` > 0 y `Pasajeros A Bordo` no faltante (77.371 registros, data frame `df_occ_reg`).
+- **Aerolíneas comparadas (41.995 registros):** las cinco con más pasajeros en vuelos regulares que operaron durante todo el periodo (registros en 2026 y al menos 60 meses con datos): Avianca (AVA), Aires (ARE), AeroRepública (RPB), Copa Airlines (CMP) y Easyfly (EFY).
+- **Aerolínea excluida:** Fast Colombia (VVC) quedó entre las cinco con más pasajeros, pero sus datos terminan en febrero de 2023, por lo que no es comparable con las demás. [https://www.supersociedades.gov.co/noticias-supersociedades/-/asset_publisher/atwl/content/proceso-de-fast-colombia-s.a.s-viva-air-]
+- **Variable de interés:** factor de ocupación = `Pasajeros A Bordo` / `Sillas Ofrecidas`.
+
+### Técnicas utilizadas
+
+- Tablas de frecuencia absoluta, relativa y acumulada (registros por aerolínea) y distribución de la ocupación por clases.
+- Medidas de tendencia central (media, mediana, moda) y de dispersión (rango, varianza, desviación estándar, rango intercuartílico).
+- Cuartiles y percentiles (P10, P90).
+- Ocupación ponderada (total de pasajeros / total de sillas) además de la media por registro.
+- Boxplots e histogramas (en densidad) por aerolínea.
+- Detección de atípicos con la regla del rango intercuartílico (Q1 − 1,5·RIC y Q3 + 1,5·RIC).
+- Prueba de Kruskal-Wallis y comparaciones por pares con Wilcoxon y corrección de Bonferroni, porque la ocupación es muy asimétrica.
+
+Scripts: `R/comparacion_aerolineas.R`. Resultados: `tablas/` y `figuras/`.
+
+### Hallazgos principales
+
+| Aerolínea | Registros | Media | Mediana | Desv. est. | RIC | Ocupación ponderada |
+|---|---|---|---|---|---|---|
+| Copa | 2.652 | 0,826 | 0,852 | 0,113 | 0,131 | 0,849 |
+| Avianca | 19.991 | 0,790 | 0,821 | 0,142 | 0,163 | 0,806 |
+| Aires | 6.317 | 0,795 | 0,817 | 0,114 | 0,142 | 0,794 |
+| AeroRepública | 4.548 | 0,786 | 0,810 | 0,123 | 0,162 | 0,825 |
+| Easyfly | 8.487 | 0,694 | 0,703 | 0,115 | 0,142 | 0,716 |
+
+1. **Easyfly se separa claramente del resto.** Su mediana (0,703) está entre 0,107 y 0,149 puntos por debajo de las demás, y la diferencia es significativa frente a cada una (p ajustado < 2e-16).
+2. **Copa tiene la mayor ocupación mediana** (0,852), con una ventaja pequeña (0,031 a 0,042) pero significativa frente a las otras cuatro, y el 50 % central más concentrado (RIC = 0,131).
+3. **Avianca, Aires y AeroRepública están prácticamente empatadas** (medianas entre 0,810 y 0,821). Solo la diferencia Avianca – AeroRepública es significativa (p ajustado = 1,1e-05), y es de solo 0,011. El orden entre ellas cambia según se use la media por registro o la ocupación ponderada.
+4. **Avianca es la más dispersa** (desviación estándar 0,142; RIC 0,163).
+5. **Asimetría a la izquierda:** en las cinco aerolíneas la media es menor que la mediana.
+6. **Atípicos:** entre 2,2 % y 4,2 % de los registros de cada aerolínea. Casi todos son bajos (1.363 en total); solo Easyfly tiene atípicos altos (39). No se concentran únicamente en la pandemia: 2021 tiene 398 y 2025 tiene 287. El 34 % de los atípicos bajos corresponde a registros de 1 o 2 vuelos, frente al 10,5 % en los registros no atípicos. Se asocia con registros pequeños, pero no lo explica todo.
+7. **Kruskal-Wallis:** se rechaza la igualdad de la ocupación entre aerolíneas (χ² = 5177,7; gl = 4; p < 2,2e-16).
+
+Easyfly promedia 51,7 sillas por vuelo, frente a 153 a 183 en las otras cuatro aerolíneas, lo que indica que opera aeronaves mucho más pequeñas. Su menor ocupación está asociada con este tipo de operación, aunque los datos no permiten establecer que sea la causa.
+
+### Limitaciones
+
+- Solo se analizan vuelos regulares con sillas reportadas; el taxi aéreo (T) no reporta sillas y queda fuera.
+- `Pasajeros A Bordo` cuenta solo pasajeros de pago, por lo que la ocupación es una aproximación y puede subestimar la ocupación física real.
+- Faltan los meses de abril a agosto de 2020 en cuatro de las cinco aerolíneas (periodo de cierre por la pandemia); no se imputaron. Easyfly registra 15 registros en julio y agosto de 2020.
+- Con más de 40.000 registros casi cualquier diferencia resulta significativa; por eso se interpretan también las diferencias de mediana.
+- Easyfly opera aeronaves de unas 52 sillas por vuelo en promedio, frente a 153 a 183 en las demás, por lo que su ocupación no es directamente comparable con la de las otras aerolíneas.
+
+## Pregunta 2:
+
+## Pregunta 3:
+
+## Pregunta 4:
+
+## Pregunta 5:

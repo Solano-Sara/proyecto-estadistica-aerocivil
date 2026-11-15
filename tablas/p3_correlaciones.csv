@@ -1,0 +1,13 @@
+metodo,variable,sillas,vuelos,pasajeros
+Pearson (registros),sillas,1,0.9703550490029166,0.9935316830868197
+Pearson (registros),vuelos,0.9703550490029166,1,0.9626465861430946
+Pearson (registros),pasajeros,0.9935316830868197,0.9626465861430946,1
+Spearman (registros),sillas,1,0.9115723374443506,0.9894681833271564
+Spearman (registros),vuelos,0.9115723374443506,1,0.9075449788303984
+Spearman (registros),pasajeros,0.9894681833271564,0.9075449788303984,1
+Pearson sobre log(1+x) (registros),sillas,1,0.9030303238943699,0.965084439489816
+Pearson sobre log(1+x) (registros),vuelos,0.9030303238943699,1,0.8766298902494448
+Pearson sobre log(1+x) (registros),pasajeros,0.965084439489816,0.8766298902494448,1
+Pearson (totales mensuales),sillas,1,0.9955470262917389,0.9938173185586158
+Pearson (totales mensuales),vuelos,0.9955470262917389,1,0.988381459470307
+Pearson (totales mensuales),pasajeros,0.9938173185586158,0.988381459470307,1
