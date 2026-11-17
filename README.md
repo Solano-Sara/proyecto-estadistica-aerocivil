@@ -315,3 +315,8 @@ Script: `R/temporal_correlacion.R`. Resultados: `tablas/lgn_tabla.csv` y `figura
 ## Pregunta 4:
 
 ## Pregunta 5:
+
+----------
+## 04_probabilidad_tlc.R 
+
+Calcula probabilidades de ocupación alta de los vuelos (pregunta 5), aplica el Teorema de Bayes y verifica el Teorema del Límite Central con una simulación sobre el número de pasajeros por registro. Genera tablas en consola y tres gráficos en la carpeta `figuras/`.
