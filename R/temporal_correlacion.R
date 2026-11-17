@@ -145,16 +145,22 @@ estacionalidad <- estac_anual |>
 print(estacionalidad)
 write_csv(estacionalidad, "tablas/p2_estacionalidad.csv")
 
-g_est <- ggplot(estacionalidad, aes(mes_nombre, indice_medio, fill = temporada)) +
+g_est <- estacionalidad |>
+  mutate(desv_pct = (indice_medio - 1) * 100) |>
+  ggplot(aes(mes_nombre, desv_pct, fill = temporada)) +
   geom_col() +
-  geom_hline(yintercept = 1, linetype = "dashed") +
+  geom_hline(yintercept = 0) +
+  geom_text(aes(label = gsub("\\.", ",", sprintf("%+.1f %%", desv_pct)),
+                vjust = ifelse(desv_pct >= 0, -0.4, 1.3)),
+            size = 3.5) +
   scale_fill_manual(values = c(Alta = "#c0392b", Intermedia = "grey70", Baja = "#2980b9")) +
-  labs(title = "Índice estacional del tráfico de pasajeros (2022-2025)",
-       subtitle = "1 = promedio mensual del año. Alta/Baja: sobre P75 / bajo P25 en al menos 3 de 4 años",
-       x = "Mes", y = "Índice estacional", fill = "Temporada",
+  scale_y_continuous(expand = expansion(mult = 0.12)) +
+  labs(title = "Estacionalidad del tráfico de pasajeros (2022-2025)",
+       subtitle = "Diferencia frente al promedio mensual del año\nAlta/Baja: sobre P75 / bajo P25 en al menos 3 de 4 años",
+       x = "Mes", y = "Diferencia frente al promedio del año (%)", fill = "Temporada",
        caption = "Fuente: Aerocivil") +
   theme_minimal()
-ggsave("figuras/p2_estacionalidad.png", g_est, width = 8, height = 5, dpi = 300)
+ggsave("figuras/p2_estacionalidad.png", g_est, width = 9, height = 5, dpi = 300)
 
 g_est_anios <- ggplot(estac_anual, aes(Mes, pasajeros, color = factor(Año))) +
   geom_line(linewidth = 0.8) +
