@@ -113,6 +113,6 @@ Todos parten de `data/aerocivil_trafico.csv` (216.599 filas, 27 columnas). Los f
 - **Definiciones:** nacional (`Tráfico` = N) es origen y destino en Colombia; internacional (`Tráfico` = I) es exactamente un extremo en Colombia. Se excluye `Tráfico` = E (ningún extremo en Colombia, 0,6 % de los registros). El umbral de 80 % es una convención; la mediana de ocupación es 0,79 y el percentil 75 es 0,88.
 
 ----------
-## 04_probabilidad_tlc.R (Persona C)
+## 04_probabilidad_tlc.R 
 
 Calcula probabilidades de ocupación alta de los vuelos (pregunta 5), aplica el Teorema de Bayes y verifica el Teorema del Límite Central con una simulación sobre el número de pasajeros por registro. Genera tablas en consola y tres gráficos en la carpeta `figuras/`.
